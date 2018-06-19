@@ -2,6 +2,7 @@ import {Recipe} from './recipe.model';
 import {EventEmitter, Injectable} from '@angular/core';
 import {Ingredient} from '../shared/ingredient.model';
 import {ShoppingListService} from '../shopping-list/shopping-list.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Injectable()
 
@@ -59,5 +60,9 @@ export class RecipeService {
 
   addIngredientsToShoppingList(ingredients : Ingredient[]){
     this.shoppingListService.addIngredients(ingredients);
+  }
+
+  getRecipeFromID(index : number){
+    return this.recipes.slice()[index];
   }
 }
