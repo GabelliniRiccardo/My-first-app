@@ -1,31 +1,33 @@
 import { Injectable } from '@angular/core';
-import {Http,  Response} from '@angular/http';
-import {RecipeService} from '../recipes/recipe.service';
-import {Recipe} from '../recipes/recipe.model';
-import 'rxjs/Rx'
+import { Http, Response } from '@angular/http';
+import 'rxjs/Rx';
 
+import { RecipeService } from '../recipes/recipe.service';
+import { Recipe } from '../recipes/recipe.model';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
-
 export class DataStorageService {
+  constructor(private http: Http,
+              private recipeService: RecipeService,
+              private authService: AuthService) {
+  }
 
-  link : string = 'https://recipes-project-e3aac.firebaseio.com/';
+  storeRecipes() {
+    const token = this.authService.getToken();
 
-  constructor(private httpService : Http,
-              private recipeService : RecipeService) { }
+    return this.http.put('https://recipes-project-e3aac.firebaseio.com/recipes.json?auth=' + token, this.recipeService.getRecipes());
+  }
 
-   storeRecipes(){
-    return this.httpService.put(this.link+'/recipes.json', this.recipeService.getRecipes())
+  getRecipes() {
+    const token = this.authService.getToken();
 
-   }
-
-   getRecipes(){
-    return this.httpService.get(this.link+'recipes.json')
+    this.http.get('https://recipes-project-e3aac.firebaseio.com/recipes.json?auth=' + token)
       .map(
-        (response : Response) => {
-          const recipes : Recipe[]  = response.json();
-          for (let recipe of recipes){
-            if (!recipe['ingredients']){
+        (response: Response) => {
+          const recipes: Recipe[] = response.json();
+          for (let recipe of recipes) {
+            if (!recipe['ingredients']) {
               recipe['ingredients'] = [];
             }
           }
@@ -33,10 +35,9 @@ export class DataStorageService {
         }
       )
       .subscribe(
-        (recipes : Recipe[]) => {
+        (recipes: Recipe[]) => {
           this.recipeService.setRecipes(recipes);
         }
-      )
-   }
-
+      );
+  }
 }

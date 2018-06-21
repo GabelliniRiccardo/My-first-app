@@ -17,11 +17,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
 import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
 import { RecipeService } from './recipes/recipe.service';
-import {DataStorageService} from './shared/data-storage.service';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import { DataStorageService } from './shared/data-storage.service';
 import { SignupComponent } from './auth/signup/signup.component';
 import { SigninComponent } from './auth/signin/signin.component';
-import {AuthService} from './auth/auth.service';
+import { AuthService } from './auth/auth.service';
+import { AuthGuard } from './auth/auth-guard.service';
 
 @NgModule({
   declarations: [
@@ -44,16 +44,9 @@ import {AuthService} from './auth/auth.service';
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
-    HttpClientModule,
     AppRoutingModule
   ],
-  providers: [
-    ShoppingListService,
-    RecipeService,
-    DataStorageService,
-    HttpClient,
-    AuthService
-  ],
+  providers: [ShoppingListService, RecipeService, DataStorageService, AuthService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
